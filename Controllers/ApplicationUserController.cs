@@ -88,7 +88,7 @@ namespace Registration.Controllers
                 var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                 EmailService emailService = new EmailService();
                 await emailService.SendEmailAsync(user.Email, "Confirm your account",
-                    $"Подтвердите регистрацию, перейдя по ссылке: <a href='https://localhost:44316/api/applicationUser?id={user.Id}&code={code}'>link</a>");
+                    $"Подтвердите регистрацию, перейдя по ссылке: <a href='https://localhost:44316/api/applicationUser?id={user.Id}'>link</a>");
 
                 return Ok();
             }
@@ -100,10 +100,10 @@ namespace Registration.Controllers
             }
         }
 
-        [HttpGet("/{id}/{code}")]
-        public async Task<IActionResult> ConfirmEmail([FromQuery]string id, [FromQuery]string code)
+        [HttpGet("/{id}")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery]string id)
         {
-            if (id == null || code == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -118,9 +118,17 @@ namespace Registration.Controllers
             return Ok();
         }
 
-        //public async Task<IActionResult> LogIn(string login, string password)
-        //{
+        [HttpGet("/{login}/{password}")]
+        public async Task<IActionResult> CheckLoggingIn([FromQuery]string login, [FromQuery]string password)
+        {
+            var result = await singInManager.PasswordSignInAsync(login, password, false, false);
 
-        //}
+            if (!result.Succeeded)
+            {
+                return Forbid();
+            }
+
+            return Ok();
+        }
     }
 }

@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Registration.Interfaces;
 using Registration.Models;
+using Registration.Services;
 using Registration.Validator;
 
 namespace Registration
@@ -37,12 +38,15 @@ namespace Registration
             services.AddDbContext<AuthenticationContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
 
+            services.AddDbContext<ApplicationContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("GuessWhatGoogleGame")));
+
             services.AddIdentity<UserIdentityChanged, IdentityRole>()
                 .AddEntityFrameworkStores<AuthenticationContext>()
                 .AddDefaultTokenProviders();
 
             services.AddTransient<IValidator<User>, UserRegistrationValidator>();
-            services.AddTransient<IUserInitializer, IUserInitializer>();
+            services.AddTransient<IUserInitializer, UserInitializer>();
 
             services.AddCors(options =>
             {
