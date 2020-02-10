@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Registration.Interfaces;
 using Registration.Models;
+using Registration.Services;
+using Registration.Validator;
 
 namespace Registration.Controllers
 {
@@ -14,15 +19,23 @@ namespace Registration.Controllers
     {
         #region fields
         private readonly ApplicationContext context;
+        private readonly SeedData seedData;
         #endregion
 
         public GuessWhatGoogleGameController(ApplicationContext Context)
         {
             context = Context;
+            seedData = new SeedData(context);
         }
 
-        //[HttpPost]
-        //public Task<IActionResult> CreateQuestion(GuessWhatGoogleGame question)
+        [HttpGet("Initial")]
+        public void FillDataBase()
+        {
+            seedData.Initial();
+        }
+
+        //[HttpPost()]
+        //public async Task<IActionResult> Create(Question question)
         //{
 
         //}

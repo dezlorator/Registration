@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Registration.Interfaces
 {
-    public interface IUserInitializer
+    public interface IInitializer<T> where T : class
     {
-        UserIdentityChanged Initialize(User user);
+        UserIdentityChanged Initialize(T obj);
     }
 }

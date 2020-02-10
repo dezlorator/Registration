@@ -22,13 +22,13 @@ namespace Registration.Controllers
         private SignInManager<UserIdentityChanged> singInManager;
         private readonly IValidator<User> userValidator;
         private readonly List<IUserValidator> userValidators;
-        private readonly IUserInitializer userInitializer;
+        private readonly IInitializer<User> userInitializer;
         #endregion
 
         #region ctor
         public ApplicationUserController(UserManager<UserIdentityChanged> UserManager,
             SignInManager<UserIdentityChanged> SingInManager,
-            IValidator<User> UserValidator, IUserInitializer UserInitializer)
+            IValidator<User> UserValidator, IInitializer<User> UserInitializer)
         {
             userManager = UserManager;
             singInManager = SingInManager;

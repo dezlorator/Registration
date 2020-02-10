@@ -9,7 +9,7 @@ namespace Registration.Models
     {
         public int Id { get; set; }
         public string QuestionString { get; set; }
-        public IQueryable<Answer> Answers { get; set; }
+        public IEnumerable<Answer> Answers { get; set; }
         public bool IsCorrect { get; set; }
     }
 }

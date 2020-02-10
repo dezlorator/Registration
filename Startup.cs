@@ -46,7 +46,7 @@ namespace Registration
                 .AddDefaultTokenProviders();
 
             services.AddTransient<IValidator<User>, UserRegistrationValidator>();
-            services.AddTransient<IUserInitializer, UserInitializer>();
+            services.AddTransient<IInitializer<User>, UserInitializer>();
 
             services.AddCors(options =>
             {
