@@ -130,3 +130,11 @@ C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\Ma
 C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\MimeKit.dll
 C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll
 C:\Users\danil\source\repos\Registration\Registration\obj\Debug\netcoreapp3.1\Registration.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\MyClient\angular.json
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\MyClient\e2e\tsconfig.json
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\MyClient\package-lock.json
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\MyClient\package.json
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\MyClient\tsconfig.app.json
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\MyClient\tsconfig.json
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\MyClient\tsconfig.spec.json
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\MyClient\tslint.json

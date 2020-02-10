@@ -21,7 +21,8 @@ export class AppComponent implements OnInit {
       UserName: new FormControl('', [Validators.required]),
       FullName: new FormControl('', [Validators.required]),
       Email: new FormControl('', [Validators.required, Validators.email]),
-      Password: new FormControl('', [Validators.required, Validators.minLength(4), MyValidators.isNumberExist]),
+      Password: new FormControl('', [Validators.required, Validators.minLength(4), MyValidators.isNumberExist,
+      MyValidators.isLoverLetterExist, MyValidators.isUpperLetterExist]),
       ConfirmPassword: new FormControl('', [Validators.required])
     })
   }  

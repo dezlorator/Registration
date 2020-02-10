@@ -29,9 +29,11 @@
       <label>Password</label>
       <input type="password" placeholder="Password" formControlName="Password">
       <div class="validation" *ngIf="form.get('Password').invalid && form.get('Password').touched">
-        <small *ngIf="form.get('Password').errors.required">Password field can`t be empty</small>
-        <small *ngIf="form.get('Password').errors.minlength">Password field can`t be less than 4 symbols</small>
-        <small *ngIf="form.get('Password').errors.numberIsNotExist">Password has no numbers</small>
+        <small *ngIf="form.get('Password').errors.required">Password field can`t be empty<br></small>
+        <small *ngIf="form.get('Password').errors.minlength">Password field can`t be less than 4 symbols<br></small>
+        <small *ngIf="form.get('Password').errors.upperLetterIsNotExist">Password should have at least one upper letter<br></small>
+        <small *ngIf="form.get('Password').errors.loverLetterIsNotExist">Password should have at least one lover letter<br></small>
+        <small *ngIf="form.get('Password').errors.numberIsNotExist">Password should have at least one number<br></small>
       </div>
     </div>
 

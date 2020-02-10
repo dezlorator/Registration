@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Registration.Interfaces;
 using Registration.Models;
 using Registration.Services;
+using Registration.Validator;
 
 namespace Registration.Controllers
 {
@@ -17,19 +18,27 @@ namespace Registration.Controllers
     public class ApplicationUserController : ControllerBase
     {
         #region fields
-        private UserManager<UserIdentityChanged> _userManager;
-        private SignInManager<UserIdentityChanged> _singInManager;
-        private IValidator<User> _userValidator;
+        private UserManager<UserIdentityChanged> userManager;
+        private SignInManager<UserIdentityChanged> singInManager;
+        private readonly IValidator<User> userValidator;
+        private readonly List<IUserValidator> userValidators;
+        private readonly IUserInitializer userInitializer;
         #endregion
 
         #region ctor
         public ApplicationUserController(UserManager<UserIdentityChanged> UserManager,
             SignInManager<UserIdentityChanged> SingInManager,
-            IValidator<User> UserValidator)
+            IValidator<User> UserValidator, IUserInitializer UserInitializer)
         {
-            _userManager = UserManager;
-            _singInManager = SingInManager;
-            _userValidator = UserValidator;
+            userManager = UserManager;
+            singInManager = SingInManager;
+            userValidator = UserValidator;
+            userInitializer = UserInitializer;
+            userValidators = new List<IUserValidator>
+            {
+                new UserEmailValidator(), new UserFullNameValidator(), 
+                new UserPasswordValidator(), new UserNameValidators()
+            };
         }
         #endregion
 
@@ -38,27 +47,29 @@ namespace Registration.Controllers
         [Route("Register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        //перенести логику в сервис
         public async Task<IActionResult> PostApplicationUser(User UserToRegister)
         {
-            string errorMessage;
+            List<string> errorMessages = new List<string>();
 
-            if (!_userValidator.Validate(UserToRegister, out errorMessage))
+            foreach(var validator in userValidators)
             {
-                //TODO: Logging
-
-                return BadRequest(errorMessage);
+                validator.Validate(UserToRegister, errorMessages);
             }
 
-            var user = new UserIdentityChanged()
+            if(errorMessages.Count != 0)
             {
-                Email = UserToRegister.Email,
-                FullName = UserToRegister.FullName,
-                UserName = UserToRegister.UserName
-            };
+                //TODO logging
+
+                return BadRequest(errorMessages);
+            }
+
+            var user = userInitializer.Initialize(UserToRegister);
 
             try
             {
-                var result = await _userManager.CreateAsync(user, UserToRegister.Password);
+                var result = await userManager.CreateAsync(user, UserToRegister.Password);
 
                 if (!result.Succeeded)
                 {
@@ -66,7 +77,6 @@ namespace Registration.Controllers
                     {
                         if (error.Code == "DuplicateUserName")
                         {
-                            //return Forbid();??
                             return Conflict();
                         }
                     }
@@ -74,16 +84,11 @@ namespace Registration.Controllers
 
                     return BadRequest();
                 }
-
-                //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                //var callbackUrl = Url.Action(
-                //    "ConfirmEmail",
-                //    "Account",
-                //    new { userId = user.Id, code = code },
-                //    protocol: HttpContext.Request.Scheme);
-                //EmailService emailService = new EmailService();
-                //await emailService.SendEmailAsync(user.Email, "Confirm your account",
-                //    $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
+                
+                var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                EmailService emailService = new EmailService();
+                await emailService.SendEmailAsync(user.Email, "Confirm your account",
+                    $"Подтвердите регистрацию, перейдя по ссылке: <a href='https://localhost:44316/api/applicationUser?id={user.Id}&code={code}'>link</a>");
 
                 return Ok();
             }
@@ -95,28 +100,27 @@ namespace Registration.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        [HttpGet("/{id}/{code}")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery]string id, [FromQuery]string code)
         {
-            if (userId == null || code == null)
+            if (id == null || code == null)
             {
                 return NotFound();
             }
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
-            var result = await _userManager.ConfirmEmailAsync(user, code);
-            if (result.Succeeded)
-            {
-                return Ok();
-            }
-            else
-            {
-                return NotFound();
-            }
+            user.EmailConfirmed = true;
+            await userManager.UpdateAsync(user);
+
+            return Ok();
         }
 
+        //public async Task<IActionResult> LogIn(string login, string password)
+        //{
+
+        //}
     }
 }

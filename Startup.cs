@@ -38,9 +38,11 @@ namespace Registration
             options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
 
             services.AddIdentity<UserIdentityChanged, IdentityRole>()
-                .AddEntityFrameworkStores<AuthenticationContext>();
+                .AddEntityFrameworkStores<AuthenticationContext>()
+                .AddDefaultTokenProviders();
 
             services.AddTransient<IValidator<User>, UserRegistrationValidator>();
+            services.AddTransient<IUserInitializer, IUserInitializer>();
 
             services.AddCors(options =>
             {
