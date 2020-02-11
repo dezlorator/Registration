@@ -11,5 +11,6 @@ namespace Registration.Models
         public string QuestionString { get; set; }
         public IEnumerable<Answer> Answers { get; set; }
         public bool IsCorrect { get; set; }
+        public double TimeSpend { get; set; }
     }
 }

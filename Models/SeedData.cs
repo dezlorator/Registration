@@ -23,12 +23,13 @@ namespace Registration.Models
                 {
                     QuestionString = "Game",
                     IsCorrect = false,
+                    TimeSpend = 8.32,
                     Answers = new List<Answer>
                     {
-                        new Answer{ AnswerString = "Photo", IsRight = false },
-                        new Answer{ AnswerString = "Video", IsRight = false },
-                        new Answer{ AnswerString = "Game", IsRight = true },
-                        new Answer{ AnswerString = "Picture", IsRight = false }
+                        new Answer{ AnswerString = "Photo" },
+                        new Answer{ AnswerString = "Video" },
+                        new Answer{ AnswerString = "Game" },
+                        new Answer{ AnswerString = "Picture" }
                     }
                 });
 
@@ -36,12 +37,13 @@ namespace Registration.Models
                 {
                     QuestionString = "Furniture",
                     IsCorrect = false,
+                    TimeSpend = 2.36,
                     Answers = new List<Answer>
                     {
-                        new Answer{ AnswerString = "Furniture", IsRight = false },
-                        new Answer{ AnswerString = "Chair", IsRight = false },
-                        new Answer{ AnswerString = "Home", IsRight = true },
-                        new Answer{ AnswerString = "Notebook", IsRight = false }
+                        new Answer{ AnswerString = "Furniture" },
+                        new Answer{ AnswerString = "Chair" },
+                        new Answer{ AnswerString = "Home" },
+                        new Answer{ AnswerString = "Notebook" }
                     }
                 });
 
@@ -49,12 +51,13 @@ namespace Registration.Models
                 {
                     QuestionString = "Clock",
                     IsCorrect = false,
+                    TimeSpend = 4.19,
                     Answers = new List<Answer>
                     {
-                        new Answer{ AnswerString = "Time", IsRight = false },
-                        new Answer{ AnswerString = "Clock", IsRight = true },
-                        new Answer{ AnswerString = "Button", IsRight = false },
-                        new Answer{ AnswerString = "Mouse", IsRight = false }
+                        new Answer{ AnswerString = "Time" },
+                        new Answer{ AnswerString = "Clock" },
+                        new Answer{ AnswerString = "Button" },
+                        new Answer{ AnswerString = "Mouse" }
                     }
                 });
 

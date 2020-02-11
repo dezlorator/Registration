@@ -37,7 +37,7 @@ namespace Registration.Controllers
         //[HttpPost()]
         //public async Task<IActionResult> Create(Question question)
         //{
-
+            
         //}
     }
 }
