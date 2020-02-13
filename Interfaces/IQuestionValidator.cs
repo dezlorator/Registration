@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Registration.Interfaces
 {
-    public interface IGameEntityValidator
+    public interface IQuestionValidator
     {
-        bool Validate(Question objectToValidate);
+        bool Validate(Question objectToValidate, out string error);
     }
 }

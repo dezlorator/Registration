@@ -16,7 +16,10 @@ namespace Registration
 {
     public class Startup
     {
-        readonly string _corsPolicyForRegistration = "CorsPolicyForRegistration";
+        #region fields
+        private readonly string corsPolicyForRegistration = "CorsPolicyForRegistration";
+        private readonly string corsPolicyForGame = "CorsPolicyForGame";
+        #endregion
 
         public Startup(IConfiguration configuration)
         {
@@ -43,6 +46,10 @@ namespace Registration
             services.AddTransient<IInitializer<User>, UserInitializer>();
             services.AddTransient<IQuestionGameService, GameQuestionService>();
             services.AddTransient<IQuestionRepository, QuestionsRepository>();
+            services.AddTransient<IAnswerRepository, AnswerRepository>();
+            services.AddTransient<IGetPhotoFromGoogleService, GetPhotoFromGoogleService>();
+            services.AddTransient<IDownloadImageService, DownloadImageService>();
+            services.Configure<ServerURLSettings>(Configuration.GetSection("Server"));
 
             services.AddCors(options =>
             {
@@ -50,9 +57,13 @@ namespace Registration
                 {
                     builder.WithOrigins("http://localhost:4200").AllowAnyMethod();
                 });
-                options.AddPolicy(_corsPolicyForRegistration, builder =>
+                options.AddPolicy(corsPolicyForRegistration, builder =>
                 {
                     builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+                });
+                options.AddPolicy(corsPolicyForGame, builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyMethod();
                 });
             });
         }

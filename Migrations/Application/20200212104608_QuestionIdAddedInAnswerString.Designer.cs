@@ -10,8 +10,8 @@ using Registration.Models;
 namespace Registration.Migrations.Application
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200210134347_AnswersTypeChangesd")]
-    partial class AnswersTypeChangesd
+    [Migration("20200212104608_QuestionIdAddedInAnswerString")]
+    partial class QuestionIdAddedInAnswerString
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,11 +31,11 @@ namespace Registration.Migrations.Application
                     b.Property<string>("AnswerString")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsRight")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("QuestionId")
                         .HasColumnType("int");
+
+                    b.Property<string>("QuestionString")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -56,6 +56,9 @@ namespace Registration.Migrations.Application
 
                     b.Property<string>("QuestionString")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("TimeSpend")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

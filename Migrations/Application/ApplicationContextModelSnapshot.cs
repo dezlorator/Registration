@@ -32,6 +32,9 @@ namespace Registration.Migrations.Application
                     b.Property<int?>("QuestionId")
                         .HasColumnType("int");
 
+                    b.Property<string>("QuestionString")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");

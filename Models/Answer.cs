@@ -9,5 +9,6 @@ namespace Registration.Models
     {
         public int Id { get; set; }
         public string AnswerString { get; set; }
+        public string QuestionString { get; set; }
     }
 }

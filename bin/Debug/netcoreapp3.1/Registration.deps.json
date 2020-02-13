@@ -24,6 +24,7 @@
     ".NETCoreApp,Version=v3.1": {
       "Registration/1.0.0": {
         "dependencies": {
+          "Google.Apis.Customsearch.v1": "1.43.0.1369",
           "MailKit": "2.5.0",
           "Microsoft.AspNetCore.Cors": "2.2.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "3.1.1",
@@ -32,6 +33,7 @@
           "Microsoft.EntityFrameworkCore.Tools": "3.1.1",
           "Microsoft.Extensions.Logging.Debug": "3.1.1",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "3.1.1",
+          "Ninject": "3.3.4",
           "Microsoft.AspNetCore.Antiforgery": "3.1.0.0",
           "Microsoft.AspNetCore.Authentication.Abstractions": "3.1.0.0",
           "Microsoft.AspNetCore.Authentication.Cookies": "3.1.0.0",
@@ -304,6 +306,49 @@
         },
         "compile": {
           "Registration.dll": {}
+        }
+      },
+      "Google.Apis/1.43.0": {
+        "dependencies": {
+          "Google.Apis.Core": "1.43.0",
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.dll": {
+            "assemblyVersion": "1.43.0.0",
+            "fileVersion": "1.43.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.dll": {}
+        }
+      },
+      "Google.Apis.Core/1.43.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Core.dll": {
+            "assemblyVersion": "1.43.0.0",
+            "fileVersion": "1.43.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.Core.dll": {}
+        }
+      },
+      "Google.Apis.Customsearch.v1/1.43.0.1369": {
+        "dependencies": {
+          "Google.Apis": "1.43.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Customsearch.v1.dll": {
+            "assemblyVersion": "1.43.0.1369",
+            "fileVersion": "1.43.0.1369"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.Customsearch.v1.dll": {}
         }
       },
       "MailKit/2.5.0": {
@@ -1241,6 +1286,21 @@
         },
         "compile": {
           "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        }
+      },
+      "Ninject/3.3.4": {
+        "dependencies": {
+          "System.Reflection.Emit.ILGeneration": "4.3.0",
+          "System.Reflection.Emit.Lightweight": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Ninject.dll": {
+            "assemblyVersion": "3.3.4.0",
+            "fileVersion": "3.3.4.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Ninject.dll": {}
         }
       },
       "NuGet.Frameworks/4.7.0": {
@@ -3950,6 +4010,27 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Google.Apis/1.43.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-obrhmOs3G1NdKb6vJukj5nls3FJ8qcheSugvUDA5fHA+4sb9hOvSgtR4rzSiBFTSn30d8C9aJAUFlBtcFi4ltA==",
+      "path": "google.apis/1.43.0",
+      "hashPath": "google.apis.1.43.0.nupkg.sha512"
+    },
+    "Google.Apis.Core/1.43.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Y5uzXQP58JFV1VKENO+/IALD1ID8PSff8jFVL9jYUdiXKCI82/1hR8PAx4sQcAenFrFgCNAPSwYJRFJ46OvtBQ==",
+      "path": "google.apis.core/1.43.0",
+      "hashPath": "google.apis.core.1.43.0.nupkg.sha512"
+    },
+    "Google.Apis.Customsearch.v1/1.43.0.1369": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bfuhmZiWxg5dleTsAVKW39pzZuRGZif2EgqTfJrbZLH0HQJwuNwM9yz4J1lazMSjp7tpRqO0O6zYyUjkXXMUkQ==",
+      "path": "google.apis.customsearch.v1/1.43.0.1369",
+      "hashPath": "google.apis.customsearch.v1.1.43.0.1369.nupkg.sha512"
+    },
     "MailKit/2.5.0": {
       "type": "package",
       "serviceable": true,
@@ -4376,6 +4457,13 @@
       "sha512": "sha512-IvJe1pj7JHEsP8B8J8DwlMEx8UInrs/x+9oVY+oCD13jpLu4JbJU2WCIsMRn5C4yW9+DgkaO8uiVE5VHKjpmdQ==",
       "path": "newtonsoft.json/11.0.2",
       "hashPath": "newtonsoft.json.11.0.2.nupkg.sha512"
+    },
+    "Ninject/3.3.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-CmbWW97FfJuh4LEOVZM/spqXl4KAulRUjqeMwRd5J9rDMQArmIYaDMU3pyzXXHT062tbF0OPIMwI7tSOtprPfg==",
+      "path": "ninject/3.3.4",
+      "hashPath": "ninject.3.3.4.nupkg.sha512"
     },
     "NuGet.Frameworks/4.7.0": {
       "type": "package",

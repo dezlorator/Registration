@@ -8,9 +8,10 @@ namespace Registration.Interfaces
 {
     public interface IQuestionGameService
     {
-        public Task<bool> Create(Question question);
-        public Task<bool> Edit(Question question);
-        public Task<Question> Get(int id);
-        public Task<bool> Delete(int id);
+        Question GetWithImage(int id, out string url);
+        Task<string> Create(Question question);
+        Task<string> Edit(Question question, int id);
+        Question Get(int id);
+        Task<string> Delete(int id);
     }
 }

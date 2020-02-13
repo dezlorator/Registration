@@ -23,6 +23,11 @@ namespace Registration.Repository
             await context.Questions.AddAsync(question);
         }
 
+        public void DeleteAnswers(int questionId)
+        {
+            throw new NotImplementedException();
+        }
+
         public void DeleteQuestion(int id)
         {
             var question = context.Questions.FirstOrDefault(p => p.Id == id);
@@ -42,6 +47,11 @@ namespace Registration.Repository
         public async Task SaveChangesAsync()
         {
             await context.SaveChangesAsync();
+        }
+
+        public void Update(Question question)
+        {
+            context.Questions.Update(question);
         }
     }
 }
