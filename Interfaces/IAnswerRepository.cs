@@ -11,6 +11,5 @@ namespace Registration.Interfaces
         Task Update(Answer answer);
         Task DeleteByQuestionString(string questionString);
         IEnumerable<Answer> GetByQuestionString(string questionString);
-
     }
 }

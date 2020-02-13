@@ -7,10 +7,13 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import { CommonModule } from '@angular/common';
 import { AppComponent } from './app.component';
 import { RegistrationService } from './registration.service';
+import { GuessWhatGoogleGameComponent } from './guess-what-google-game/guess-what-google-game.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    GuessWhatGoogleGameComponent
   ],
   imports: [
     BrowserModule,
@@ -18,7 +21,8 @@ import { RegistrationService } from './registration.service';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    AppRoutingModule
   ],
   providers: [RegistrationService],
   bootstrap: [AppComponent]
