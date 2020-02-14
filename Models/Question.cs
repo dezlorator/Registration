@@ -12,5 +12,6 @@ namespace Registration.Models
         public virtual ICollection<Answer> Answers { get; set; }
         public bool IsCorrect { get; set; }
         public double TimeSpend { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

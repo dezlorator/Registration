@@ -28,6 +28,7 @@ namespace Registration.Repository
         public IEnumerable<Answer> GetByQuestionString(string questionString)
         {
             var answersToGet = context.Answers.Where(p => p.QuestionString == questionString);
+
             return answersToGet;
         }
 

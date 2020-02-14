@@ -2,9 +2,6 @@
 using Registration.Interfaces;
 using Registration.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Registration.Services
 {
@@ -14,9 +11,10 @@ namespace Registration.Services
         private readonly Random random;
         #endregion
 
-        public RandomService()
+        public RandomService(Random random)
         {
-            random = new StandardKernel(new RandomModule()).Get<Random>();
+            //this.random = new StandardKernel(new RandomModule()).Get<Random>();
+            this.random = random;
         }
         public int GetRandomNumber(int begin, int end)
         {

@@ -1,3 +1,4 @@
+using Google.Apis.Customsearch.v1;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +12,8 @@ using Registration.Models;
 using Registration.Repository;
 using Registration.Services;
 using Registration.Validator;
+using System;
+using static Google.Apis.Services.BaseClientService;
 
 namespace Registration
 {
@@ -50,6 +53,10 @@ namespace Registration
             services.AddTransient<IGetPhotoFromGoogleService, GetPhotoFromGoogleService>();
             services.AddTransient<IDownloadImageService, DownloadImageService>();
             services.AddTransient<IRandomService, RandomService>();
+            services.AddTransient<Random>();
+            services.AddTransient<CustomsearchService>((p) => {
+            return new CustomsearchService(new Initializer { ApiKey = "AIzaSyAdIkUnMWWPtet-61OpGWV14GZ2SitCcoI" });
+            });
             services.Configure<ServerURLSettings>(Configuration.GetSection("Server"));
 
             services.AddCors(options =>

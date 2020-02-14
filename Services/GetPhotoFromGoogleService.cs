@@ -5,7 +5,6 @@ using Ninject;
 using Ninject.Parameters;
 using Registration.Interfaces;
 using Registration.Models;
-using Registration.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,11 +22,9 @@ namespace Registration.Services
         private readonly CustomsearchService customSearchService;
         #endregion
 
-        public GetPhotoFromGoogleService()
+        public GetPhotoFromGoogleService(CustomsearchService customSearchService)
         {
-            customSearchService = new StandardKernel(new CustomSearchModule())
-                .Get<CustomsearchService>( new IParameter[] { new ConstructorArgument("initializer", 
-                new BaseClientService.Initializer { ApiKey = apiKey }) } );
+            this.customSearchService = customSearchService;
         }
 
         public string GetPhotoFromGoogle(string question)

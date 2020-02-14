@@ -57,7 +57,7 @@ namespace Registration.Services
             await questionRepository.CreateQuestionAsync(question);
             await questionRepository.SaveChangesAsync();
 
-            return error;
+            return null;
         }
 
         public async Task<string> Delete(int id)
@@ -73,7 +73,7 @@ namespace Registration.Services
             questionRepository.DeleteQuestion(id);
             await questionRepository.SaveChangesAsync();
 
-            return "";
+            return null;
         }
 
         public async Task<string> Edit(Question question, int id)
@@ -102,7 +102,7 @@ namespace Registration.Services
             questionRepository.Update(question);
             await questionRepository.SaveChangesAsync();
 
-            return "";
+            return null;
         }
 
         public int GetSize()
@@ -137,11 +137,11 @@ namespace Registration.Services
             return question;
         }
 
-        public Question GetWithImageByIndex(int index, out string url)
+        public Question GetWithImageByIndex(int index)
         {
             var question = GetByIndex(index);
 
-            url = getPhoto.GetPhotoFromGoogle(question.QuestionString);
+            question.ImageUrl = getPhoto.GetPhotoFromGoogle(question.QuestionString);
 
             return question;
         }

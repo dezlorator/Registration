@@ -38,7 +38,7 @@ namespace Registration.Controllers
         {
             string result = await questionGameService.Create(question);
 
-            if (result != "")
+            if (result != null)
             {
                 return ValidationProblem(result);
             }
@@ -52,7 +52,7 @@ namespace Registration.Controllers
         {
             string result = await questionGameService.Edit(question, id);
 
-            if (result != "")
+            if (result != null)
             {
                 return ValidationProblem(result);
             }
@@ -80,7 +80,7 @@ namespace Registration.Controllers
         {
             string result = await questionGameService.Delete(id);
 
-            if (result != "")
+            if (result != null)
             {
                 return NotFound();
             }
@@ -94,22 +94,20 @@ namespace Registration.Controllers
         {
             int index = randomService.GetRandomNumber(0, questionGameService.GetSize());
 
-            string imageUrl;
-
-            var question = questionGameService.GetWithImageByIndex(index, out imageUrl);
+            var question = questionGameService.GetWithImageByIndex(index);
             
             if (question == null)
             {
                 return NotFound();
             }
 
-            if(imageUrl == "")
+            if(question.ImageUrl == "")
             {
                 return NoContent();
             }
             var answers = question.Answers.Select(p => p.AnswerString);
-
-            return Ok(new { question.QuestionString, answers, imageUrl });
+            //надо ли делать отдельную модель?
+            return Ok(new { question.QuestionString, answers, question .ImageUrl});
         }
     }
 }
