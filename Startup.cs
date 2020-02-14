@@ -49,6 +49,7 @@ namespace Registration
             services.AddTransient<IAnswerRepository, AnswerRepository>();
             services.AddTransient<IGetPhotoFromGoogleService, GetPhotoFromGoogleService>();
             services.AddTransient<IDownloadImageService, DownloadImageService>();
+            services.AddTransient<IRandomService, RandomService>();
             services.Configure<ServerURLSettings>(Configuration.GetSection("Server"));
 
             services.AddCors(options =>

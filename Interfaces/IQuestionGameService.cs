@@ -8,7 +8,9 @@ namespace Registration.Interfaces
 {
     public interface IQuestionGameService
     {
-        Question GetWithImage(int id, out string url);
+        Question GetByIndex(int index);
+        int GetSize();
+        Question GetWithImageByIndex(int id, out string url);
         Task<string> Create(Question question);
         Task<string> Edit(Question question, int id);
         Question Get(int id);

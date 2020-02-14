@@ -49,6 +49,16 @@ namespace Registration.Repository
             await context.SaveChangesAsync();
         }
 
+        public Question GetByIndex(int index)
+        {
+            return context.Questions.ToList().ElementAt(index);
+        }
+
+        public int GetSize()
+        {
+            return context.Questions.Count();
+        }
+
         public void Update(Question question)
         {
             context.Questions.Update(question);

@@ -8,6 +8,8 @@ namespace Registration.Interfaces
 {
     public interface IQuestionRepository
     {
+        Question GetByIndex(int index);
+        int GetSize();
         Task CreateQuestionAsync(Question question);
         void DeleteAnswers(int questionId);
         void DeleteQuestion(int id);

@@ -20,18 +20,17 @@ namespace Registration.Controllers
     {
         #region fields
         private readonly IQuestionGameService questionGameService;
+        private readonly IRandomService randomService;
         #endregion
 
-        public GuessWhatGoogleGameController(IQuestionGameService QuestionGameService)
+        #region ctor
+        public GuessWhatGoogleGameController(IQuestionGameService QuestionGameService,
+                                             IRandomService randomService)
         {
             questionGameService = QuestionGameService;
+            this.randomService = randomService;
         }
-
-        //[HttpGet("Initial")]
-        //public void FillDataBase()
-        //{
-        //    seedData.Initial();
-        //}
+        #endregion
 
         [HttpPost()]
         [EnableCors("CorsPolicyForGame")]
@@ -89,13 +88,16 @@ namespace Registration.Controllers
             return Ok();
         }
 
-        [HttpGet("Question/{id}")]
-        public IActionResult GetQuestionWithPhoto(int id)
+        [HttpGet("Question")]
+        [EnableCors("CorsPolicyForGame")]
+        public IActionResult GetQuestionWithPhoto()
         {
+            int index = randomService.GetRandomNumber(0, questionGameService.GetSize());
+
             string imageUrl;
 
-            var question = questionGameService.GetWithImage(id, out imageUrl);
-
+            var question = questionGameService.GetWithImageByIndex(index, out imageUrl);
+            
             if (question == null)
             {
                 return NotFound();
@@ -105,9 +107,9 @@ namespace Registration.Controllers
             {
                 return NoContent();
             }
+            var answers = question.Answers.Select(p => p.AnswerString);
 
-            return Ok(new { question, imageUrl });
+            return Ok(new { question.QuestionString, answers, imageUrl });
         }
-
     }
 }

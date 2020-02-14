@@ -6,14 +6,17 @@ import { ToastrModule } from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations' 
 import { CommonModule } from '@angular/common';
 import { AppComponent } from './app.component';
-import { RegistrationService } from './registration.service';
+import { RegistrationService } from './registration/registration.service';
 import { GuessWhatGoogleGameComponent } from './guess-what-google-game/guess-what-google-game.component';
 import { AppRoutingModule } from './app-routing.module';
+import { RegistrationComponent } from './registration/registration.component';
+import { GuessWhatGoogleGameService } from './guess-what-google-game/guess-what-google-game.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    GuessWhatGoogleGameComponent
+    GuessWhatGoogleGameComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +27,7 @@ import { AppRoutingModule } from './app-routing.module';
     ToastrModule.forRoot(),
     AppRoutingModule
   ],
-  providers: [RegistrationService],
+  providers: [RegistrationService, GuessWhatGoogleGameService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

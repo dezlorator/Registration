@@ -30,8 +30,7 @@ namespace Registration.Services
             IOptionsSnapshot<ServerURLSettings> settings)
         {
             questionRepository = QuestionRepository;
-            var kernel = new StandardKernel(new GameValidatorModule());
-            validators = kernel.Get<IEnumerable<IQuestionValidator>>();
+            validators = new StandardKernel(new GameValidatorModule()).Get<IEnumerable<IQuestionValidator>>();
             this.answerRepository = answerRepository;
             this.getPhoto = getPhoto;
             this.downloadImage = downloadImage;
@@ -106,21 +105,43 @@ namespace Registration.Services
             return "";
         }
 
+        public int GetSize()
+        {
+            return questionRepository.GetSize();
+        }
+
         public Question Get(int id)
         {
             var question = questionRepository.GetQuestion(id);
+            if(question == null)
+            {
+                return null;
+            }
+
             question.Answers = answerRepository.GetByQuestionString(question.QuestionString).ToList();
 
             return question;
         }
 
-        public Question GetWithImage(int id, out string url)
+        public Question GetByIndex(int index)
         {
-            var question = Get(id);
+            var question = questionRepository.GetByIndex(index);
 
-            //url = getPhoto.GetPhotoFromGoogle(question.QuestionString);
+            if (question == null)
+            {
+                return null;
+            }
 
-            url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMhVhaZs2DEP7M-UyQaR11eLwQQceWVC6dY8qGcFdtlQcLxHFmMnd6J_1fpQ&s";
+            question.Answers = answerRepository.GetByQuestionString(question.QuestionString).ToList();
+
+            return question;
+        }
+
+        public Question GetWithImageByIndex(int index, out string url)
+        {
+            var question = GetByIndex(index);
+
+            url = getPhoto.GetPhotoFromGoogle(question.QuestionString);
 
             return question;
         }

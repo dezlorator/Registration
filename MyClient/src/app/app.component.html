@@ -1,50 +1,10 @@
-<div class="container">
-  <form [formGroup]="form" (submit)="onSubmit()">
-    <div class="form-control">
-      <label>Full Name</label>
-      <input type="text" placeholder="Full Name" formControlName="FullName">
-      <div class="validation" *ngIf="form.get('FullName').invalid && form.get('FullName').touched">
-        <small *ngIf="form.get('FullName').errors.required">FullName field can`t be empty</small>
-      </div>
-    </div>
+<nav class="navbar">
+    <ul>
+      <li><button class="btn" (click)="goToRegistration()">Registration</button></li>
+      <li><button class="btn" (click)="goToGame()">Game</button></li>
+    </ul>
+</nav>
 
-    <div class="form-control">
-      <label>User Name</label>
-      <input type="text" placeholder="User Name" formControlName="UserName">
-      <div class="validation" *ngIf="form.get('UserName').invalid && form.get('UserName').touched">
-        <small *ngIf="form.get('UserName').errors.required">Name field can`t be empty </small>
-      </div>
-    </div>
+<router-outlet></router-outlet>
 
-    <div class="form-control">
-      <label>Email</label>
-      <input type="email" placeholder="Email" formControlName="Email">
-      <div class="validation" *ngIf="form.get('Email').invalid && form.get('Email').touched">
-        <small *ngIf="form.get('Email').errors.required">Email field can` be empty</small>
-        <small *ngIf="form.get('Email').errors.email">Wrong email format</small>
-      </div>
-    </div>
 
-    <div class="form-control">
-      <label>Password</label>
-      <input type="password" placeholder="Password" formControlName="Password">
-      <div class="validation" *ngIf="form.get('Password').invalid && form.get('Password').touched">
-        <small *ngIf="form.get('Password').errors.required">Password field can`t be empty<br></small>
-        <small *ngIf="form.get('Password').errors.minlength">Password field can`t be less than 4 symbols<br></small>
-        <small *ngIf="form.get('Password').errors.upperLetterIsNotExist">Password should have at least one upper letter<br></small>
-        <small *ngIf="form.get('Password').errors.loverLetterIsNotExist">Password should have at least one lover letter<br></small>
-        <small *ngIf="form.get('Password').errors.numberIsNotExist">Password should have at least one number<br></small>
-      </div>
-    </div>
-
-    <div class="form-control">
-      <label>Confirm Password</label>
-      <input type="password" placeholder="ConfirmPassword" formControlName="ConfirmPassword">
-      <div class="validation" *ngIf="form.get('ConfirmPassword').invalid && form.get('ConfirmPassword').touched">
-        <small *ngIf="form.get('ConfirmPassword').errors.required">Password field can`t be empty</small>
-      </div>
-    </div>
- 
-    <button class="btn" type="submit" [disabled]="form.invalid">Sing in</button>
-  </form>
-</div>

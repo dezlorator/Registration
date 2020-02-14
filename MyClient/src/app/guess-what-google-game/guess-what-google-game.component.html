@@ -1,1 +1,13 @@
-<p>guess-what-google-game works!</p>
+<img class="picture" [src] = "pictureUrl">
+<form [formGroup]="form" (ngSubmit)="submit()">
+    <label
+      formArrayName="orders"
+      *ngFor="let order of form.controls.orders.controls; let i = index"
+    >
+      <input type="checkbox" [formControlName]="i" />
+      {{ordersData[i].name}}
+    </label>
+     <br>
+    <button>Choose</button>
+    <button (click)="GetQuestion()">Next question </button>
+  </form>
