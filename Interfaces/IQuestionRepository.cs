@@ -11,11 +11,9 @@ namespace Registration.Interfaces
         Question GetByIndex(int index);
         int GetSize();
         Task CreateQuestionAsync(Question question);
-        void DeleteAnswers(int questionId);
-        void DeleteQuestion(int id);
-        void Update(Question question);
+        Task DeleteQuestion(int id);
+        Task Update(Question question);
         Question GetQuestion(int id);
         IEnumerable<Question> GetAllQuestions();
-        Task SaveChangesAsync();
     }
 }

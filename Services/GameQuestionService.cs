@@ -55,7 +55,6 @@ namespace Registration.Services
             }
 
             await questionRepository.CreateQuestionAsync(question);
-            await questionRepository.SaveChangesAsync();
 
             return null;
         }
@@ -69,9 +68,8 @@ namespace Registration.Services
                 return questionNotFound;
             }
 
-            await answerRepository.DeleteByQuestionString(question.QuestionString);
-            questionRepository.DeleteQuestion(id);
-            await questionRepository.SaveChangesAsync();
+            await answerRepository.DeleteByQuestionIdAsync(id);
+            await questionRepository.DeleteQuestion(id);
 
             return null;
         }
@@ -97,10 +95,9 @@ namespace Registration.Services
 
             questionFromDb.QuestionString = question.QuestionString;
             questionFromDb.TimeSpend = question.TimeSpend;
-            questionFromDb.Answers = question.Answers;
 
-            questionRepository.Update(question);
-            await questionRepository.SaveChangesAsync();
+            await answerRepository.UpdateRangeAsync(question.Answers);
+            await questionRepository.Update(question);
 
             return null;
         }
@@ -118,7 +115,7 @@ namespace Registration.Services
                 return null;
             }
 
-            question.Answers = answerRepository.GetByQuestionString(question.QuestionString).ToList();
+            question.Answers = answerRepository.GetByQuestionId(question.Id).ToList();
 
             return question;
         }
@@ -132,7 +129,7 @@ namespace Registration.Services
                 return null;
             }
 
-            question.Answers = answerRepository.GetByQuestionString(question.QuestionString).ToList();
+            question.Answers = answerRepository.GetByQuestionId(question.Id).ToList();
 
             return question;
         }

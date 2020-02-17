@@ -24,10 +24,10 @@ namespace Registration.Controllers
         #endregion
 
         #region ctor
-        public GuessWhatGoogleGameController(IQuestionGameService QuestionGameService,
+        public GuessWhatGoogleGameController(IQuestionGameService questionGameService,
                                              IRandomService randomService)
         {
-            questionGameService = QuestionGameService;
+            this.questionGameService = questionGameService;
             this.randomService = randomService;
         }
         #endregion
@@ -36,11 +36,11 @@ namespace Registration.Controllers
         [EnableCors("CorsPolicyForGame")]
         public async Task<IActionResult> Create(Question question)
         {
-            string result = await questionGameService.Create(question);
+            string createdQuestion = await questionGameService.Create(question);
 
-            if (result != null)
+            if (createdQuestion != null)
             {
-                return ValidationProblem(result);
+                return ValidationProblem(createdQuestion);
             }
 
             return Ok();
@@ -48,13 +48,13 @@ namespace Registration.Controllers
 
         [HttpPut("{id}")]
         [EnableCors("CorsPolicyForGame")]
-        public async Task<IActionResult> Edit(Question question, [FromQuery]int id)
+        public async Task<IActionResult> Edit(Question question, int id)
         {
-            string result = await questionGameService.Edit(question, id);
+            string error = await questionGameService.Edit(question, id);
 
-            if (result != null)
+            if (error != null)
             {
-                return ValidationProblem(result);
+                return ValidationProblem(error);
             }
 
             return Ok();
@@ -64,14 +64,14 @@ namespace Registration.Controllers
         [EnableCors("CorsPolicyForGame")]
         public IActionResult GetQuestion(int id)
         {
-            var result = questionGameService.Get(id);
+            var question = questionGameService.Get(id);
 
-            if(result == null)
+            if(question == null)
             {
                 return NotFound();
             }
-
-            return Ok(result);
+            //Problem with Json
+            return Ok(question);
         }
 
         [HttpDelete()]
@@ -107,7 +107,7 @@ namespace Registration.Controllers
             }
             var answers = question.Answers.Select(p => p.AnswerString);
             //надо ли делать отдельную модель?
-            return Ok(new { question.QuestionString, answers, question .ImageUrl});
+            return Ok(new { question.QuestionString, answers, question.ImageUrl});
         }
     }
 }

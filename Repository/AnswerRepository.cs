@@ -18,23 +18,23 @@ namespace Registration.Repository
             this.context = context;
         }
 
-        public async Task DeleteByQuestionString(string questionString)
+        public async Task DeleteByQuestionIdAsync(int questionId)
         {
-            var answersToDelete = context.Answers.Where(p => p.QuestionString == questionString);
+            var answersToDelete = context.Answers.Where(p => p.QuestionId == questionId);
             context.Answers.RemoveRange(answersToDelete);
             await context.SaveChangesAsync();
         }
 
-        public IEnumerable<Answer> GetByQuestionString(string questionString)
+        public IEnumerable<Answer> GetByQuestionId(int questionId)
         {
-            var answersToGet = context.Answers.Where(p => p.QuestionString == questionString);
+            var answersToGet = context.Answers.Where(p => p.QuestionId == questionId);
 
             return answersToGet;
         }
 
-        public async Task Update(Answer answer)
+        public async Task UpdateRangeAsync(ICollection<Answer> answer)
         {
-            context.Answers.Update(answer);
+            context.Answers.UpdateRange(answer);
             await context.SaveChangesAsync();
         }
     }

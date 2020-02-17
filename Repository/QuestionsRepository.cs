@@ -13,25 +13,24 @@ namespace Registration.Repository
         private readonly ApplicationContext context;
         #endregion
 
+        #region ctor
         public QuestionsRepository(ApplicationContext Context)
         {
             context = Context;
         }
+        #endregion
 
         public async Task CreateQuestionAsync(Question question)
         {
             await context.Questions.AddAsync(question);
+            await context.SaveChangesAsync();
         }
 
-        public void DeleteAnswers(int questionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteQuestion(int id)
+        public async Task DeleteQuestion(int id)
         {
             var question = context.Questions.FirstOrDefault(p => p.Id == id);
             context.Questions.Remove(question);
+            await context.SaveChangesAsync();
         }
 
         public IEnumerable<Question> GetAllQuestions()
@@ -44,11 +43,6 @@ namespace Registration.Repository
             return context.Questions.FirstOrDefault(p => p.Id == id);
         }
 
-        public async Task SaveChangesAsync()
-        {
-            await context.SaveChangesAsync();
-        }
-
         public Question GetByIndex(int index)
         {
             return context.Questions.ToList().ElementAt(index);
@@ -59,9 +53,10 @@ namespace Registration.Repository
             return context.Questions.Count();
         }
 
-        public void Update(Question question)
+        public async Task Update(Question question)
         {
             context.Questions.Update(question);
+            await context.SaveChangesAsync();
         }
     }
 }

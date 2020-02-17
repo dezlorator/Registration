@@ -8,8 +8,8 @@ namespace Registration.Interfaces
 {
     public interface IAnswerRepository
     {
-        Task Update(Answer answer);
-        Task DeleteByQuestionString(string questionString);
-        IEnumerable<Answer> GetByQuestionString(string questionString);
+        Task UpdateRangeAsync(ICollection<Answer> answer);
+        Task DeleteByQuestionIdAsync(int questionId);
+        IEnumerable<Answer> GetByQuestionId(int questionId);
     }
 }
