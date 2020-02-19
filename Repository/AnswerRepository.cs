@@ -32,10 +32,9 @@ namespace Registration.Repository
             return answersToGet;
         }
 
-        public async Task UpdateRangeAsync(ICollection<Answer> answer)
+        public void UpdateRange(ICollection<Answer> answer)
         {
             context.Answers.UpdateRange(answer);
-            await context.SaveChangesAsync();
         }
     }
 }

@@ -1,0 +1,16 @@
+<div class="container">
+    <form [formGroup]="form" (submit)="onSubmit()">
+
+      <div class="form-control">
+        <label>User Name</label>
+        <input type="text" placeholder="User Name" formControlName="UserName">
+      </div>
+  
+      <div class="form-control">
+        <label>Password</label>
+        <input type="text" placeholder="Password" formControlName="Password">
+      </div>
+
+      <button class="btn" type="submit" [disabled]="form.invalid">Sing in</button>
+    </form>
+  </div>

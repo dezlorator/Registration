@@ -2,6 +2,7 @@ using Google.Apis.Customsearch.v1;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using EasyCaching.Core.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,14 +15,17 @@ using Registration.Services;
 using Registration.Validator;
 using System;
 using static Google.Apis.Services.BaseClientService;
+using EasyCaching.Core;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Registration
 {
     public class Startup
     {
         #region fields
-        private readonly string corsPolicyForRegistration = "CorsPolicyForRegistration";
-        private readonly string corsPolicyForGame = "CorsPolicyForGame";
+        private const string corsPolicyForRegistration = "CorsPolicyForRegistration";
+        private const string corsPolicyForGame = "CorsPolicyForGame";
+        private const string CachingProvider = "redis1";
         #endregion
 
         public Startup(IConfiguration configuration)
@@ -34,6 +38,8 @@ namespace Registration
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+
             services.AddControllers();
 
             services.AddDbContext<AuthenticationContext>(options =>
@@ -54,10 +60,12 @@ namespace Registration
             services.AddTransient<IDownloadImageService, DownloadImageService>();
             services.AddTransient<IRandomService, RandomService>();
             services.AddTransient<Random>();
+            services.AddDistributedMemoryCache();
             services.AddTransient<CustomsearchService>((p) => {
-            return new CustomsearchService(new Initializer { ApiKey = "AIzaSyAdIkUnMWWPtet-61OpGWV14GZ2SitCcoI" });
+                return new CustomsearchService(new Initializer { ApiKey = "AIzaSyAdIkUnMWWPtet-61OpGWV14GZ2SitCcoI" });
             });
             services.Configure<ServerURLSettings>(Configuration.GetSection("Server"));
+            services.AddTransient<ICacheService, CachingFromByteService>();
 
             services.AddCors(options =>
             {
@@ -73,6 +81,36 @@ namespace Registration
                 {
                     builder.AllowAnyOrigin().AllowAnyMethod();
                 });
+            });
+
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    // Cookie settings
+            //    options.Cookie.HttpOnly = true;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+            //    options.LoginPath = "/api/applicationUser/SingIn";
+            //    options.SlidingExpiration = true;
+            //});
+
+            services.AddEasyCaching(options =>
+            {
+                //use redis cache
+                options.UseRedis(redisConfig =>
+                {
+                    //Setup Endpoint
+                    redisConfig.DBConfig.Endpoints.Add(new ServerEndPoint("localhost", 6379));
+
+                    //Setup password if applicable
+                    //if (!string.IsNullOrEmpty(serverPassword))
+                    //{
+                    //    redisConfig.DBConfig.Password = serverPassword;
+                    //}
+
+                    //Allow admin operations
+                    redisConfig.DBConfig.AllowAdmin = true;
+                },
+                    CachingProvider);
             });
         }
 

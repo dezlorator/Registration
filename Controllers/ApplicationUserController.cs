@@ -23,7 +23,6 @@ namespace Registration.Controllers
         private readonly List<IUserValidator> userValidators;
         private readonly IInitializer<User> userInitializer;
         #endregion
-
         #region ctor
         public ApplicationUserController(UserManager<UserIdentityChanged> UserManager,
             SignInManager<UserIdentityChanged> SingInManager,
@@ -45,9 +44,7 @@ namespace Registration.Controllers
         [Route("Register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-
-        //перенести логику в сервис
-        public async Task<IActionResult> PostApplicationUser(User UserToRegister)
+        public async Task<IActionResult> Register(User UserToRegister)
         {
             List<string> errorMessages = new List<string>();
 
@@ -82,11 +79,13 @@ namespace Registration.Controllers
 
                     return BadRequest();
                 }
-                
+
+                await singInManager.SignInAsync(user, false);
+
                 var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                 EmailService emailService = new EmailService();
                 await emailService.SendEmailAsync(user.Email, "Confirm your account",
-                    $"Подтвердите регистрацию, перейдя по ссылке: <a href='https://localhost:44316/api/applicationUser?id={user.Id}'>link</a>");
+                    $"Подтвердите регистрацию, перейдя по ссылке: <a href='https://localhost:44316/api/applicationUser/ConfirmEmail/{user.Id}'>link</a>");
 
                 return Ok();
             }
@@ -98,8 +97,9 @@ namespace Registration.Controllers
             }
         }
 
-        [HttpGet("/{id}")]
-        public async Task<IActionResult> ConfirmEmail([FromQuery]string id)
+        [EnableCors("CorsPolicyForRegistration")]
+        [HttpGet("ConfirmEmail/{id}")]
+        public async Task<IActionResult> ConfirmEmail(string id)
         {
             if (id == null)
             {
@@ -116,16 +116,42 @@ namespace Registration.Controllers
             return Ok();
         }
 
-        [HttpGet("/{login}/{password}")]
-        public async Task<IActionResult> CheckLoggingIn([FromQuery]string login, [FromQuery]string password)
+        [EnableCors("CorsPolicyForRegistration")]
+        [HttpPost("SingIn")]
+        public async Task<IActionResult> CheckLoggingIn(SingInModel singIn)
         {
-            var result = await singInManager.PasswordSignInAsync(login, password, false, false);
+            //var user = await userManager.FindByNameAsync(singIn.UserName);
+
+            //if(user == null)
+            //{
+            //    return NoContent();
+            //}
+
+            var result = await singInManager.PasswordSignInAsync(singIn.UserName, singIn.Password, false, false);
 
             if (!result.Succeeded)
             {
                 return Forbid();
             }
 
+            HttpContextAccessor accessor = new HttpContextAccessor();
+            var a = accessor.HttpContext.User.Identity.Name;
+
+            var userName = User.Identity.Name;
+
+            return Ok();
+        }
+
+        [EnableCors("CorsPolicyForRegistration")]
+        [HttpGet("SingOut")]
+        public async Task<IActionResult> SingOut()
+        {
+            var a = User.Claims;
+
+            var userName = User.Identity.Name;
+            
+            await singInManager.SignOutAsync();
+            //валидация?
             return Ok();
         }
     }

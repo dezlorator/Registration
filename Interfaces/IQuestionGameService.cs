@@ -10,7 +10,7 @@ namespace Registration.Interfaces
     {
         Question GetByIndex(int index);
         int GetSize();
-        Question GetWithImageByIndex(int id);
+        Task<Question> GetWithImageByIndex(int id);
         Task<string> Create(Question question);
         Task<string> Edit(Question question, int id);
         Question Get(int id);

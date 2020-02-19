@@ -5,7 +5,7 @@ export class MyValidators {
     static isNumberExist(control: FormControl): {[key: string]: boolean} {
       let passsord = control.value;
       for(var n = 0; n < control.value.length; n++){
-        if(passsord.charCodeAt(n) > 47 && passsord.charCodeAt(n) < 58){
+        if(passsord.charCodeAt(n) >= 47 && passsord.charCodeAt(n) <= 58){
           return null
         }
       }
@@ -16,7 +16,7 @@ export class MyValidators {
     static isUpperLetterExist(control: FormControl): {[key: string]: boolean} {
       let passsord = control.value;
       for(var n = 0; n < control.value.length; n++){
-        if(passsord.charCodeAt(n) > 65 && passsord.charCodeAt(n) < 90){
+        if(passsord.charCodeAt(n) >= 65 && passsord.charCodeAt(n) <= 90){
           return null
         }
       }
@@ -27,7 +27,7 @@ export class MyValidators {
     static isLoverLetterExist(control: FormControl): {[key: string]: boolean} {
       let passsord = control.value;
       for(var n = 0; n < control.value.length; n++){
-        if(passsord.charCodeAt(n) > 97 && passsord.charCodeAt(n) < 122){
+        if(passsord.charCodeAt(n) >= 97 && passsord.charCodeAt(n) <= 122){
           return null
         }
       }

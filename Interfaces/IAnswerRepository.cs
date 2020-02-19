@@ -8,7 +8,7 @@ namespace Registration.Interfaces
 {
     public interface IAnswerRepository
     {
-        Task UpdateRangeAsync(ICollection<Answer> answer);
+        void UpdateRange(ICollection<Answer> answer);
         Task DeleteByQuestionIdAsync(int questionId);
         IEnumerable<Answer> GetByQuestionId(int questionId);
     }

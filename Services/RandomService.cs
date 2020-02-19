@@ -13,7 +13,6 @@ namespace Registration.Services
 
         public RandomService(Random random)
         {
-            //this.random = new StandardKernel(new RandomModule()).Get<Random>();
             this.random = random;
         }
         public int GetRandomNumber(int begin, int end)

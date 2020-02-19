@@ -37,7 +37,7 @@ namespace Registration.Services
 
             if (paging == null)
             {
-                return "";
+                return null;
             }
 
             foreach (var item in paging)
@@ -48,7 +48,7 @@ namespace Registration.Services
                 }
             }
 
-            return "";
+            return null;
         }
     }
 }

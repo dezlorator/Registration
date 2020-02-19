@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -90,21 +91,22 @@ namespace Registration.Controllers
 
         [HttpGet("Question")]
         [EnableCors("CorsPolicyForGame")]
-        public IActionResult GetQuestionWithPhoto()
+        public async Task<IActionResult> GetQuestionWithPhoto()
         {
             int index = randomService.GetRandomNumber(0, questionGameService.GetSize());
 
-            var question = questionGameService.GetWithImageByIndex(index);
+            var question = await questionGameService.GetWithImageByIndex(index);
             
             if (question == null)
             {
                 return NotFound();
             }
 
-            if(question.ImageUrl == "")
+            if(question.ImageUrl == null)
             {
                 return NoContent();
             }
+
             var answers = question.Answers.Select(p => p.AnswerString);
             //надо ли делать отдельную модель?
             return Ok(new { question.QuestionString, answers, question.ImageUrl});

@@ -11,12 +11,15 @@ import { GuessWhatGoogleGameComponent } from './guess-what-google-game/guess-wha
 import { AppRoutingModule } from './app-routing.module';
 import { RegistrationComponent } from './registration/registration.component';
 import { GuessWhatGoogleGameService } from './guess-what-google-game/guess-what-google-game.service';
+import { SingInComponent } from './sing-in/sing-in.component';
+import { SingInService } from './sing-in/sing-in.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     GuessWhatGoogleGameComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    SingInComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +30,7 @@ import { GuessWhatGoogleGameService } from './guess-what-google-game/guess-what-
     ToastrModule.forRoot(),
     AppRoutingModule
   ],
-  providers: [RegistrationService, GuessWhatGoogleGameService],
+  providers: [RegistrationService, GuessWhatGoogleGameService, SingInService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

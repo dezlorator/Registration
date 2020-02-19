@@ -13,7 +13,6 @@ export class RegistrationComponent implements OnInit {
   form: FormGroup;
   errorMessage: string;  
 
-
   constructor(private registrationService: RegistrationService, private toaster: ToastrService) { }
 
   ngOnInit(){
@@ -21,7 +20,7 @@ export class RegistrationComponent implements OnInit {
       UserName: new FormControl('', [Validators.required]),
       FullName: new FormControl('', [Validators.required]),
       Email: new FormControl('', [Validators.required, Validators.email]),
-      Password: new FormControl('', [Validators.required, Validators.minLength(4), MyValidators.isNumberExist,
+      Password: new FormControl('', [Validators.required, Validators.minLength(6), MyValidators.isNumberExist,
       MyValidators.isLoverLetterExist, MyValidators.isUpperLetterExist]),
       ConfirmPassword: new FormControl('', [Validators.required])
     })

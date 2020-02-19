@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Ninject;
 using Registration.Interfaces;
 using Registration.Models;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Registration.Services
@@ -21,20 +23,23 @@ namespace Registration.Services
         private readonly IDownloadImageService downloadImage;
         private const string questionNotFound = "Question not found";
         private readonly IOptionsSnapshot<ServerURLSettings> settings;
+        private readonly ICacheService cachingService;
         #endregion
 
-        public GameQuestionService(IQuestionRepository QuestionRepository,
+        public GameQuestionService(IQuestionRepository questionRepository,
             IAnswerRepository answerRepository,
             IGetPhotoFromGoogleService getPhoto,
             IDownloadImageService downloadImage, 
-            IOptionsSnapshot<ServerURLSettings> settings)
+            IOptionsSnapshot<ServerURLSettings> settings,
+            ICacheService cachingService)
         {
-            questionRepository = QuestionRepository;
+            this.questionRepository = questionRepository;
             validators = new StandardKernel(new GameValidatorModule()).Get<IEnumerable<IQuestionValidator>>();
             this.answerRepository = answerRepository;
             this.getPhoto = getPhoto;
             this.downloadImage = downloadImage;
             this.settings = settings;
+            this.cachingService = cachingService;
         }
 
         public async Task<string> Create(Question question)
@@ -96,7 +101,7 @@ namespace Registration.Services
             questionFromDb.QuestionString = question.QuestionString;
             questionFromDb.TimeSpend = question.TimeSpend;
 
-            await answerRepository.UpdateRangeAsync(question.Answers);
+            answerRepository.UpdateRange(question.Answers);
             await questionRepository.Update(question);
 
             return null;
@@ -134,11 +139,19 @@ namespace Registration.Services
             return question;
         }
 
-        public Question GetWithImageByIndex(int index)
+        public async Task<Question> GetWithImageByIndex(int index)
         {
             var question = GetByIndex(index);
 
-            question.ImageUrl = getPhoto.GetPhotoFromGoogle(question.QuestionString);
+            if(await cachingService.IsExist(question.QuestionString))
+            {
+                question.ImageUrl = await cachingService.GetItem(question.QuestionString);
+            }
+            else
+            {
+                question.ImageUrl = getPhoto.GetPhotoFromGoogle(question.QuestionString);
+                await cachingService.SetItem(question.QuestionString, question.ImageUrl);
+            }
 
             return question;
         }
