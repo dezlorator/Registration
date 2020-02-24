@@ -88,9 +88,17 @@
               "target": "Package",
               "version": "[3.1.1, )"
             },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            },
             "Ninject": {
               "target": "Package",
               "version": "[3.3.4, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[5.1.2, )"
             }
           },
           "imports": [

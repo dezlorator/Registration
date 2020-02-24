@@ -66,11 +66,44 @@ namespace Registration.Migrations.Application
                     b.ToTable("Questions");
                 });
 
+            modelBuilder.Entity("Registration.Models.UserAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId")
+                        .IsUnique();
+
+                    b.ToTable("UserAnswer");
+                });
+
             modelBuilder.Entity("Registration.Models.Answer", b =>
                 {
                     b.HasOne("Registration.Models.Question", "Question")
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId");
+                });
+
+            modelBuilder.Entity("Registration.Models.UserAnswer", b =>
+                {
+                    b.HasOne("Registration.Models.Question", null)
+                        .WithOne("UserAnswer")
+                        .HasForeignKey("Registration.Models.UserAnswer", "QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

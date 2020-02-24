@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
-import {HttpClientModule} from '@angular/common/http'
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http'
 import { ToastrModule } from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations' 
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,9 @@ import { RegistrationComponent } from './registration/registration.component';
 import { GuessWhatGoogleGameService } from './guess-what-google-game/guess-what-google-game.service';
 import { SingInComponent } from './sing-in/sing-in.component';
 import { SingInService } from './sing-in/sing-in.service';
+import { AuthHttpInterceptor } from './sing-in/httpInterceptor';
+import { StorageServiceModule } from "ngx-webstorage-service";
+import { AuthInterceptor } from './sing-in/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -28,9 +31,15 @@ import { SingInService } from './sing-in/sing-in.service';
     HttpClientModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    AppRoutingModule
+    AppRoutingModule,
+    StorageServiceModule
   ],
-  providers: [RegistrationService, GuessWhatGoogleGameService, SingInService],
+  providers: [RegistrationService, GuessWhatGoogleGameService, SingInService,
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

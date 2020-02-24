@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Registration.Interfaces;
 using Registration.Models;
+using Registration.Models.ReceivedModels;
 using Registration.Services;
 using Registration.Validator;
 
@@ -22,14 +23,22 @@ namespace Registration.Controllers
         #region fields
         private readonly IQuestionGameService questionGameService;
         private readonly IRandomService randomService;
+        private readonly IWorkWithUserService workWithUserService;
+        private readonly IConsumeRabbitMQHostedService<UserAnswer> rabbitMessager;
+        private readonly IInitializer<ReceivedUserAnswer, UserAnswer> userAnswerInitializer;
+        private const int userIdIndex = 0;
         #endregion
 
         #region ctor
-        public GuessWhatGoogleGameController(IQuestionGameService questionGameService,
-                                             IRandomService randomService)
+        public GuessWhatGoogleGameController(IQuestionGameService questionGameService, IRandomService randomService, 
+            IWorkWithUserService workWithUserService, IConsumeRabbitMQHostedService<UserAnswer> rabbitMessager,
+            IInitializer<ReceivedUserAnswer, UserAnswer> userAnswerInitializer)
         {
             this.questionGameService = questionGameService;
             this.randomService = randomService;
+            this.workWithUserService = workWithUserService;
+            this.rabbitMessager = rabbitMessager;
+            this.userAnswerInitializer = userAnswerInitializer;
         }
         #endregion
 
@@ -107,9 +116,32 @@ namespace Registration.Controllers
                 return NoContent();
             }
 
-            var answers = question.Answers.Select(p => p.AnswerString);
-            //надо ли делать отдельную модель?
-            return Ok(new { question.QuestionString, answers, question.ImageUrl});
+            return Ok(question);
+        }
+
+        [HttpPost("GetAnswer")]
+        [EnableCors("CorsPolicyForGame")]
+        public async Task<IActionResult> GetUserAnswer(ReceivedUserAnswer answer)
+        {
+            if (!workWithUserService.IsUserAuthorized())
+            {
+                return Unauthorized();
+            }
+
+            var question = questionGameService.GetById(answer.QuestionId);
+
+            if(question == null)
+            {
+                return NotFound();
+            }
+
+            var userAnswer = userAnswerInitializer.Initialize(answer);
+
+            userAnswer.UserId = workWithUserService.GetAuthorizedUserClaims().ToList()[userIdIndex].Value;
+
+            rabbitMessager.SendMessage(userAnswer);
+
+            return Ok();
         }
     }
 }

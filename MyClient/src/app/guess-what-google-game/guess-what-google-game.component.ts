@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class GuessWhatGoogleGameComponent implements OnInit {
 answers: string[];
+questionId: number;
 idContainer: number[];
 iterator: number = 0;
 errorMessage: string;
@@ -58,9 +59,27 @@ ordersData = [
     }
     else if(this.ordersData[selected].name == this.question){
       this.toaster.success("You are right");
+      let userAnswer = {
+        QuestionId: this.questionId,
+        IsCorrect: true
+      }
+      this.service.sendUserAnswer(userAnswer).subscribe(
+        (result: any) =>{
+
+        }
+      )
     }
     else{
       this.toaster.warning("You are wrong");
+      let userAnswer = {
+        QuestionId: this.questionId,
+        IsCorrect: false
+      }
+      this.service.sendUserAnswer(userAnswer).subscribe(
+        (result: any) =>{
+          
+        }
+      )
     }
   }
   GetQuestion(){
@@ -72,7 +91,7 @@ ordersData = [
         this.ordersData[2].name = result.answers[2];
         this.ordersData[3].name = result.answers[3];
         this.question = result.questionString;
-        console.log(result);
+        this.questionId = result.questionId;
       },
       error =>{
         console.log(error);

@@ -17,6 +17,15 @@ using System;
 using static Google.Apis.Services.BaseClientService;
 using EasyCaching.Core;
 using Microsoft.Extensions.Caching.Distributed;
+using MimeKit;
+using System.Collections.Generic;
+using Registration.Models.ResponceModels;
+using Registration.Initializers;
+using Registration.Validator.GameEntityValidators;
+using Microsoft.AspNetCore.Http;
+using Registration.Models.ReceivedModels;
+using RabbitMQ.Client;
+using Microsoft.AspNetCore.Server.IISIntegration;
 
 namespace Registration
 {
@@ -52,20 +61,47 @@ namespace Registration
                 .AddEntityFrameworkStores<AuthenticationContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddTransient<IInitializer<User>, UserInitializer>();
+            services.AddTransient<IInitializer<User, UserIdentityChanged >, UserInitializer>();
+            services.AddTransient<IInitializer<Question, ResponceQuestion>, QuestionResponceInitializer>();
             services.AddTransient<IQuestionGameService, GameQuestionService>();
             services.AddTransient<IQuestionRepository, QuestionsRepository>();
             services.AddTransient<IAnswerRepository, AnswerRepository>();
             services.AddTransient<IGetPhotoFromGoogleService, GetPhotoFromGoogleService>();
             services.AddTransient<IDownloadImageService, DownloadImageService>();
             services.AddTransient<IRandomService, RandomService>();
+            services.AddTransient<IWorkWithUserRepository, WorkWithUserRepository>();
+            services.AddTransient<IWorkWithUserService, WorkWithUserService>();
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IConsumeRabbitMQHostedService<UserAnswer>, ConsumeRabbitMQHostedService>();
+            services.AddTransient<IInitializer<ReceivedUserAnswer, UserAnswer>, UserAnswerInitializer>();
             services.AddTransient<Random>();
+            services.AddTransient<ConnectionFactory>((p) => 
+            { 
+                return new ConnectionFactory
+                {
+                    HostName = "localhost",
+                    Port = 5672,
+                    UserName = "guest",
+                    Password = "guest"
+                };
+            });
+            services.AddTransient<HttpContextAccessor>();
+            services.AddTransient<List<IQuestionValidator>>((p) => 
+            {
+                return new List<IQuestionValidator> { new QuestionStringValidator(), new AnswerValidator() };
+            });
+            services.AddTransient<List<IUserValidator>>((p) =>
+            {
+                return new List<IUserValidator> { new UserEmailValidator(), new UserFullNameValidator(),
+                                                  new UserPasswordValidator(), new UserNameValidators()};
+            });
             services.AddDistributedMemoryCache();
             services.AddTransient<CustomsearchService>((p) => {
                 return new CustomsearchService(new Initializer { ApiKey = "AIzaSyAdIkUnMWWPtet-61OpGWV14GZ2SitCcoI" });
             });
-            services.Configure<ServerURLSettings>(Configuration.GetSection("Server"));
             services.AddTransient<ICacheService, CachingFromByteService>();
+
+            services.AddAuthentication(IISDefaults.AuthenticationScheme);
 
             services.AddCors(options =>
             {
@@ -75,23 +111,13 @@ namespace Registration
                 });
                 options.AddPolicy(corsPolicyForRegistration, builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+                    builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
                 });
                 options.AddPolicy(corsPolicyForGame, builder =>
                 {
                     builder.AllowAnyOrigin().AllowAnyMethod();
                 });
             });
-
-            //services.ConfigureApplicationCookie(options =>
-            //{
-            //    // Cookie settings
-            //    options.Cookie.HttpOnly = true;
-            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-
-            //    options.LoginPath = "/api/applicationUser/SingIn";
-            //    options.SlidingExpiration = true;
-            //});
 
             services.AddEasyCaching(options =>
             {

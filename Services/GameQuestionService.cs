@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Ninject;
 using Registration.Interfaces;
 using Registration.Models;
+using Registration.Models.ResponceModels;
 using Registration.Validator.GameEntityValidators;
 using System;
 using System.Collections.Generic;
@@ -17,29 +18,24 @@ namespace Registration.Services
     {
         #region fields
         private readonly IQuestionRepository questionRepository;
-        private readonly IEnumerable<IQuestionValidator> validators;
+        private readonly List<IQuestionValidator> validators;
+        private readonly IInitializer<Question, ResponceQuestion> questionInitializer;
         private readonly IAnswerRepository answerRepository;
         private readonly IGetPhotoFromGoogleService getPhoto;
-        private readonly IDownloadImageService downloadImage;
         private const string questionNotFound = "Question not found";
-        private readonly IOptionsSnapshot<ServerURLSettings> settings;
         private readonly ICacheService cachingService;
         #endregion
 
-        public GameQuestionService(IQuestionRepository questionRepository,
-            IAnswerRepository answerRepository,
-            IGetPhotoFromGoogleService getPhoto,
-            IDownloadImageService downloadImage, 
-            IOptionsSnapshot<ServerURLSettings> settings,
-            ICacheService cachingService)
+        public GameQuestionService(IQuestionRepository questionRepository, IAnswerRepository answerRepository,
+            IGetPhotoFromGoogleService getPhoto,  ICacheService cachingService,
+            IInitializer<Question, ResponceQuestion> questionInitializer, List<IQuestionValidator> validators)
         {
             this.questionRepository = questionRepository;
-            validators = new StandardKernel(new GameValidatorModule()).Get<IEnumerable<IQuestionValidator>>();
+            this.validators = validators;
             this.answerRepository = answerRepository;
             this.getPhoto = getPhoto;
-            this.downloadImage = downloadImage;
-            this.settings = settings;
             this.cachingService = cachingService;
+            this.questionInitializer = questionInitializer;
         }
 
         public async Task<string> Create(Question question)
@@ -139,7 +135,7 @@ namespace Registration.Services
             return question;
         }
 
-        public async Task<Question> GetWithImageByIndex(int index)
+        public async Task<ResponceQuestion> GetWithImageByIndex(int index)
         {
             var question = GetByIndex(index);
 
@@ -153,7 +149,12 @@ namespace Registration.Services
                 await cachingService.SetItem(question.QuestionString, question.ImageUrl);
             }
 
-            return question;
+            return questionInitializer.Initialize(question);
+        }
+
+        public Question GetById(int id)
+        {
+            return questionRepository.GetById(id);
         }
     }
 }

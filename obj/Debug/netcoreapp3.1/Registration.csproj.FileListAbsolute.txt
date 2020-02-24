@@ -147,4 +147,5 @@ C:\Users\danil\source\repos\Registration\Registration\obj\Debug\netcoreapp3.1\Re
 C:\Users\danil\source\repos\Registration\Registration\obj\Debug\netcoreapp3.1\Registration.dll
 C:\Users\danil\source\repos\Registration\Registration\obj\Debug\netcoreapp3.1\Registration.pdb
 C:\Users\danil\source\repos\Registration\Registration\obj\Debug\netcoreapp3.1\Registration.csprojAssemblyReference.cache
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\RabbitMQ.Client.dll
 C:\Users\danil\source\repos\Registration\Registration\obj\Debug\netcoreapp3.1\Registration.MvcApplicationPartsAssemblyInfo.cache

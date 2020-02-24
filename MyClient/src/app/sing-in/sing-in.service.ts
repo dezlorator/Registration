@@ -10,6 +10,6 @@ export class SingInService {
     }
 
     singIn(singInInfo: any) {
-        return this.http.post(this.url, singInInfo);
+        return this.http.post(this.url, singInInfo, {observe: 'response'});
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Registration.Interfaces
 {
-    interface IUserValidator
+    public interface IUserValidator
     {
         bool Validate(User value, List<string> errorMessages);
     }

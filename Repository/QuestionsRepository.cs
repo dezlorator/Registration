@@ -46,6 +46,7 @@ namespace Registration.Repository
         public Question GetByIndex(int index)
         {
             return context.Questions.ToList().ElementAt(index);
+            
         }
 
         public int GetSize()
@@ -58,5 +59,12 @@ namespace Registration.Repository
             context.Questions.Update(question);
             await context.SaveChangesAsync();
         }
+
+        public Question GetById(int id)
+        {
+            return context.Questions.FirstOrDefault(p => p.Id == id);
+        }
+
+
     }
 }

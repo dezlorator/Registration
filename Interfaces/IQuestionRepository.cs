@@ -15,5 +15,7 @@ namespace Registration.Interfaces
         Task Update(Question question);
         Question GetQuestion(int id);
         IEnumerable<Question> GetAllQuestions();
+        Question GetById(int id);
+
     }
 }

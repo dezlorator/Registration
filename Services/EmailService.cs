@@ -1,5 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
+using Registration.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Registration.Services
 {
-    public class EmailService
+    public class EmailService : IEmailService
     {
         public async Task SendEmailAsync(string email, string subject, string message)
         {

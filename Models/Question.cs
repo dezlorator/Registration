@@ -13,5 +13,6 @@ namespace Registration.Models
         public bool IsCorrect { get; set; }
         public double TimeSpend { get; set; }
         public string ImageUrl { get; set; }
+        public UserAnswer UserAnswer { get; set; }
     }
 }

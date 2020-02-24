@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Registration.Services
 {
-    public class UserInitializer : IInitializer<User>
+    public class UserInitializer : IInitializer<User, UserIdentityChanged>
     {
         public UserIdentityChanged Initialize(User user)
         {

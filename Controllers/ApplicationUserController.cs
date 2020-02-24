@@ -18,24 +18,14 @@ namespace Registration.Controllers
     public class ApplicationUserController : ControllerBase
     {
         #region fields
-        private UserManager<UserIdentityChanged> userManager;
-        private SignInManager<UserIdentityChanged> singInManager;
-        private readonly List<IUserValidator> userValidators;
-        private readonly IInitializer<User> userInitializer;
+        private readonly IWorkWithUserService workWithUserService;
+        private readonly IEmailService emailService;
         #endregion
         #region ctor
-        public ApplicationUserController(UserManager<UserIdentityChanged> UserManager,
-            SignInManager<UserIdentityChanged> SingInManager,
-            IInitializer<User> UserInitializer)
+        public ApplicationUserController(IWorkWithUserService workWithUserService, IEmailService emailService)
         {
-            userManager = UserManager;
-            singInManager = SingInManager;;
-            userInitializer = UserInitializer;
-            userValidators = new List<IUserValidator>
-            {
-                new UserEmailValidator(), new UserFullNameValidator(), 
-                new UserPasswordValidator(), new UserNameValidators()
-            };
+            this.workWithUserService = workWithUserService;
+            this.emailService = emailService;
         }
         #endregion
 
@@ -46,112 +36,64 @@ namespace Registration.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register(User UserToRegister)
         {
-            List<string> errorMessages = new List<string>();
+            List<string> errors = await workWithUserService.Register(UserToRegister);
 
-            foreach(var validator in userValidators)
+            if(errors != null)
             {
-                validator.Validate(UserToRegister, errorMessages);
+                return BadRequest(errors);
             }
 
-            if(errorMessages.Count != 0)
-            {
-                //TODO logging
+            var userId = (await workWithUserService.GetUserByName(UserToRegister.UserName)).Id;
 
-                return BadRequest(errorMessages);
-            }
+            await emailService.SendEmailAsync(UserToRegister.Email, "Confirm your account",
+                    $"Подтвердите регистрацию, перейдя по ссылке: <a href='https://localhost:44316/api/applicationUser/ConfirmEmail/{userId}'>link</a>");
 
-            var user = userInitializer.Initialize(UserToRegister);
-
-            try
-            {
-                var result = await userManager.CreateAsync(user, UserToRegister.Password);
-
-                if (!result.Succeeded)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        if (error.Code == "DuplicateUserName")
-                        {
-                            return Conflict();
-                        }
-                    }
-                    //TODO: Logging
-
-                    return BadRequest();
-                }
-
-                await singInManager.SignInAsync(user, false);
-
-                var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                EmailService emailService = new EmailService();
-                await emailService.SendEmailAsync(user.Email, "Confirm your account",
-                    $"Подтвердите регистрацию, перейдя по ссылке: <a href='https://localhost:44316/api/applicationUser/ConfirmEmail/{user.Id}'>link</a>");
-
-                return Ok();
-            }
-            catch(Exception e)
-            {
-                //TODO: Logging
-
-                return BadRequest(e.Message);
-            }
+            return Ok();
         }
 
         [EnableCors("CorsPolicyForRegistration")]
         [HttpGet("ConfirmEmail/{id}")]
         public async Task<IActionResult> ConfirmEmail(string id)
         {
-            if (id == null)
+            var isSuccess = await workWithUserService.ConfirmEmail(id);
+
+            if(!isSuccess)
             {
                 return NotFound();
             }
-            var user = await userManager.FindByIdAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            user.EmailConfirmed = true;
-            await userManager.UpdateAsync(user);
 
             return Ok();
         }
 
         [EnableCors("CorsPolicyForRegistration")]
         [HttpPost("SingIn")]
-        public async Task<IActionResult> CheckLoggingIn(SingInModel singIn)
+        public async Task<IActionResult> SignIn(SingInModel singIn)
         {
-            //var user = await userManager.FindByNameAsync(singIn.UserName);
+            var user = await workWithUserService.GetUserByName(singIn.UserName);
 
-            //if(user == null)
-            //{
-            //    return NoContent();
-            //}
+            if(user == null)
+            {
+                return NotFound();
+            }
 
-            var result = await singInManager.PasswordSignInAsync(singIn.UserName, singIn.Password, false, false);
+            var authResult = await workWithUserService.PasswordSignInAsync(singIn);
 
-            if (!result.Succeeded)
+            if (!authResult.Succeeded)
             {
                 return Forbid();
             }
 
-            HttpContextAccessor accessor = new HttpContextAccessor();
-            var a = accessor.HttpContext.User.Identity.Name;
+            var authToken = await workWithUserService.GetUserTokenAsync(user);
 
-            var userName = User.Identity.Name;
-
-            return Ok();
+            return Ok(authToken);
         }
 
         [EnableCors("CorsPolicyForRegistration")]
         [HttpGet("SingOut")]
         public async Task<IActionResult> SingOut()
         {
-            var a = User.Claims;
+            await workWithUserService.SignOutAsync();
 
-            var userName = User.Identity.Name;
-            
-            await singInManager.SignOutAsync();
-            //валидация?
             return Ok();
         }
     }
