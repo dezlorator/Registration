@@ -148,4 +148,12 @@ C:\Users\danil\source\repos\Registration\Registration\obj\Debug\netcoreapp3.1\Re
 C:\Users\danil\source\repos\Registration\Registration\obj\Debug\netcoreapp3.1\Registration.pdb
 C:\Users\danil\source\repos\Registration\Registration\obj\Debug\netcoreapp3.1\Registration.csprojAssemblyReference.cache
 C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\RabbitMQ.Client.dll
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Logging.dll
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.dll
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\danil\source\repos\Registration\Registration\bin\Debug\netcoreapp3.1\IdentityModel.dll
 C:\Users\danil\source\repos\Registration\Registration\obj\Debug\netcoreapp3.1\Registration.MvcApplicationPartsAssemblyInfo.cache

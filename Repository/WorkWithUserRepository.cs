@@ -58,7 +58,7 @@ namespace Registration.Repository
 
         public async Task<string> GetUserTokenAsync(UserIdentityChanged user)
         {
-            return await userManager.GetAuthenticationTokenAsync(user, "Windows", "");
+            return await userManager.GetAuthenticationTokenAsync(user, "Windows", "Auth-Token");
         }
 
         public async Task SignOutAsync()

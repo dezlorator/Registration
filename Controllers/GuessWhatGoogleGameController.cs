@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -26,19 +27,22 @@ namespace Registration.Controllers
         private readonly IWorkWithUserService workWithUserService;
         private readonly IConsumeRabbitMQHostedService<UserAnswer> rabbitMessager;
         private readonly IInitializer<ReceivedUserAnswer, UserAnswer> userAnswerInitializer;
+        private readonly JwtSecurityTokenHandler jwtSecurityTokenHandler;
         private const int userIdIndex = 0;
         #endregion
 
         #region ctor
         public GuessWhatGoogleGameController(IQuestionGameService questionGameService, IRandomService randomService, 
             IWorkWithUserService workWithUserService, IConsumeRabbitMQHostedService<UserAnswer> rabbitMessager,
-            IInitializer<ReceivedUserAnswer, UserAnswer> userAnswerInitializer)
+            IInitializer<ReceivedUserAnswer, UserAnswer> userAnswerInitializer,
+            JwtSecurityTokenHandler jwtSecurityTokenHandler)
         {
             this.questionGameService = questionGameService;
             this.randomService = randomService;
             this.workWithUserService = workWithUserService;
             this.rabbitMessager = rabbitMessager;
             this.userAnswerInitializer = userAnswerInitializer;
+            this.jwtSecurityTokenHandler = jwtSecurityTokenHandler;
         }
         #endregion
 
@@ -123,7 +127,14 @@ namespace Registration.Controllers
         [EnableCors("CorsPolicyForGame")]
         public async Task<IActionResult> GetUserAnswer(ReceivedUserAnswer answer)
         {
-            if (!workWithUserService.IsUserAuthorized())
+            if (!Request.Headers.ContainsKey("Authorization") || Request.Headers["Authorization"] == 0)
+            {
+                return Unauthorized();
+            }
+
+            var jwtToken = jwtSecurityTokenHandler.ReadJwtToken(Request.Headers["Authorization"]);
+
+            if(DateTime.Now.CompareTo(jwtToken.ValidTo) == 1)
             {
                 return Unauthorized();
             }
@@ -137,7 +148,7 @@ namespace Registration.Controllers
 
             var userAnswer = userAnswerInitializer.Initialize(answer);
 
-            userAnswer.UserId = workWithUserService.GetAuthorizedUserClaims().ToList()[userIdIndex].Value;
+            userAnswer.UserId = jwtToken.Claims.FirstOrDefault(p => p.Type == "UserId").Value;
 
             rabbitMessager.SendMessage(userAnswer);
 

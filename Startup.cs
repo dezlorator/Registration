@@ -26,6 +26,9 @@ using Microsoft.AspNetCore.Http;
 using Registration.Models.ReceivedModels;
 using RabbitMQ.Client;
 using Microsoft.AspNetCore.Server.IISIntegration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Registration
 {
@@ -47,6 +50,31 @@ namespace Registration
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.RequireHttpsMetadata = false;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            // укзывает, будет ли валидироваться издатель при валидации токена
+                            ValidateIssuer = true,
+                            // строка, представляющая издателя
+                            ValidIssuer = AuthOptions.ISSUER,
+
+                            // будет ли валидироваться потребитель токена
+                            ValidateAudience = true,
+                            // установка потребителя токена
+                            ValidAudience = AuthOptions.AUDIENCE,
+                            // будет ли валидироваться время существования
+                            ValidateLifetime = true,
+
+                            // установка ключа безопасности
+                            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                            // валидация ключа безопасности
+                            ValidateIssuerSigningKey = true,
+                        };
+                    });
+
             services.AddHttpContextAccessor();
 
             services.AddControllers();
@@ -75,6 +103,7 @@ namespace Registration
             services.AddTransient<IConsumeRabbitMQHostedService<UserAnswer>, ConsumeRabbitMQHostedService>();
             services.AddTransient<IInitializer<ReceivedUserAnswer, UserAnswer>, UserAnswerInitializer>();
             services.AddTransient<Random>();
+            services.AddTransient<JwtSecurityTokenHandler>();
             services.AddTransient<ConnectionFactory>((p) => 
             { 
                 return new ConnectionFactory
@@ -115,7 +144,7 @@ namespace Registration
                 });
                 options.AddPolicy(corsPolicyForGame, builder =>
                 {
-                    builder.AllowAnyOrigin().AllowAnyMethod();
+                    builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
                 });
             });
 
@@ -148,15 +177,14 @@ namespace Registration
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseAuthentication();
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseCors();
-
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {

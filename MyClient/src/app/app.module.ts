@@ -37,7 +37,7 @@ import { AuthInterceptor } from './sing-in/auth.interceptor';
   providers: [RegistrationService, GuessWhatGoogleGameService, SingInService,
   {
     provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptor,
+    useClass: AuthHttpInterceptor,
     multi: true
   }],
   bootstrap: [AppComponent]

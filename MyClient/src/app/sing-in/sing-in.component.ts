@@ -26,6 +26,7 @@ export class SingInComponent implements OnInit {
 
     this.service.singIn(singInInfo).subscribe(
       (result: any) =>{
+        localStorage.setItem("token", result.body.encodedJwt);
         this.toaster.success("Sing in completed");
       },
       error =>{

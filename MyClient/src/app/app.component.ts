@@ -20,6 +20,7 @@ constructor(private router: Router, private http: HttpClient, private toaster: T
       this.router.navigate(['/signIn']);
     }
     signOut(){
+      localStorage.clear();
       this.http.get("https://localhost:44316/api/applicationUser/SingOut").subscribe(
         (result : any) =>{
           this.toaster.success("Successfully loged out");
