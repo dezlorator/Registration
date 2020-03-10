@@ -140,11 +140,11 @@ namespace Registration
                 });
                 options.AddPolicy(corsPolicyForRegistration, builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                    builder.WithOrigins("http://localhost:4200").WithMethods("Post", "Get").WithHeaders("Authorization", "content-type");
                 });
                 options.AddPolicy(corsPolicyForGame, builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                    builder.WithOrigins("http://localhost:4200").AllowAnyMethod().WithHeaders("Authorization", "content-type");
                 });
             });
 
